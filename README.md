@@ -30,7 +30,7 @@ The top 20 results are displayed. <br>
 
 Term Frequency(TF)=Number of times the word occures in document / Total Number of words in document
 
-Inverse Document Frequency(idf)=Total Number of documents / Number of documents with the keyword
+Inverse Document Frequency(idf)=log( Total Number of documents / Number of documents with the keyword )
 
 TF_IDF=TF*IDF
 

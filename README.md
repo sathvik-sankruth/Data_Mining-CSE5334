@@ -2,7 +2,7 @@
 
 A search feature which ranks the result based on the tf-idf scores.
 
-Website Link:http://sankruth06.pythonanywhere.com/
+Website Link:http://satsankruth.pythonanywhere.com/
 
 
 # How to Deploy code :
@@ -13,11 +13,13 @@ Go to the http link <br>
 
 # How code works:
 Read data which is a csv file from pandas.  <br>
-Tokenizer uses regular expressions to remove unwanted data. <br>
+Preprocess data to lower case. <br>
+Remove punctuations and apostrophe. <br>
 Remove stop words using nltk. <br>
+Stem the data using Porter Stemming. <br>
 Calculate term frequency. <br>
 Calculate Inverse Document Frequency. <br>
-Store tf-idf. <br>
+Store tf-idf in a new pickle file which saves lot of time. <br>
 
 Query Words: <br>
 The query input is taken from the html page. <br>
@@ -32,14 +34,15 @@ Term Frequency(TF)=Number of times the word occures in document / Total Number o
 
 Inverse Document Frequency(idf)=log( Total Number of documents / Number of documents with the keyword )
 
-TF_IDF=TF*IDF
+TF_IDF= TF * IDF
 
 
 # Challenges faced:
 The data set is huge which has around 40K rows. Takes a long time for more than 40 seconds to read the data set and perform calculations for each query. Hence Im reading the dataset at the beginning of the search function and precalculating the tf-idf scores, so that it's easy to get the search result once the page is loaded.
 
 # Contributions:
-Implemented stop words reduction while calculating tf-idf.
+Implemented stop words reduction and stemming while calculating tf-idf. <br>
+Added pickle to save the initial loading time. <br>
 
 
 
@@ -49,5 +52,7 @@ Implemented stop words reduction while calculating tf-idf.
 * https://www.geeksforgeeks.org/removing-stop-words-nltk-python/
 
 * https://help.pythonanywhere.com/pages/Flask/
+
+* https://www.youtube.com/watch?v=M-QRwEEZ9-8
 
 

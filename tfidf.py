@@ -3,7 +3,12 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
 from collections import Counter
 #from num2words import num2words
-
+import math
+import pandas as pd
+from nltk.tokenize import RegexpTokenizer
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
+from collections import defaultdict
 import nltk
 import os
 import string
@@ -57,8 +62,81 @@ def preprocess(data):
     data = remove_punctuation(data)
     return data
 
+def count_document1(document, c):
+	document_in_c = 0
+	for doc in document:
+		if c == doc:
+			document_in_c += 1
+	return document_in_c
+
+
+def concatenate_text1(categories, document, c):
+    text_in_c = []
+    for i in range(len(document)):
+        if c == categories[i]:
+            text_in_c.extend(document[i])
+
+    return text_in_c
+
+
+def something():
+    #print("GOOGLE")
+    vid = pd.read_csv('google.csv')
+    tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
+    stops = stopwords.words('english')
+    stemmer = PorterStemmer()
+    total_words = []
+    final_document = []
+    weight_vectors = []
+    vocabulary = []
+    categories = []
+    prior = {}
+    condprob = defaultdict(dict)
+    for i in range(len(vid)):
+        tokens = tokenizer.tokenize(vid['title'][i])
+        tokens += tokenizer.tokenize(vid['tags'][i])
+        # Remove stop words
+        final_tokens = []
+
+        for token in tokens:
+            token = token.lower()
+            if token not in stops:
+                token = stemmer.stem(token)
+                final_tokens.append(token)
+                if token not in vocabulary:
+                    vocabulary.append(token)
+        final_document.append(final_tokens)
+    total_document = len(final_document)
+
+    total_term = len(vocabulary)
+    print("C_ID")
+    ratings = vid['category_id']
+    C_ID=ratings
+    # categories = []
+    for rating in ratings:
+        if rating not in categories:
+            categories.append(rating)
+
+    for c in categories:
+        # Count how many documents are in class c
+        document_in_c = count_document1(C_ID, c)
+        # print(document_in_c)
+        prior[c] = document_in_c / float(total_document)
+        # Concatenate all the text of class c in one list
+        text_in_c = concatenate_text1(C_ID, final_document, c)
+
+        for term in vocabulary:
+            # Count how many term t are in class c
+            Tct = text_in_c.count(term)
+            condprob[term][c] = (Tct + 1) / (len(text_in_c) + total_term)
+
+    pickle.dump(prior,open("prior.p", "wb"))
+    pickle.dump(condprob, open("condprob.p", "wb"))
+    pickle.dump(categories,open("categories.p", "wb"))
+
 def invertedindex():
     video_Data = pd.read_csv("youtube-new/USvideos.csv")
+
     processed_text=[]
     processed_title=[]
     for i in range(len(video_Data)):
@@ -146,6 +224,7 @@ def invertedindex():
     pickle.dump(tf_idf, open("save.p", "wb"))
 
 
+
     #print(len(tf_idf))
 
 
@@ -204,3 +283,50 @@ def matching_score(k, query):
 
 
 #matching_score(10, "trump")
+
+def classify(test):
+    #test = "trump india"
+    catdict = {1: 'Film & Animation', 2: 'Autos & Vechicles', 10: 'Music',
+               15: 'Pets & Animals', 17: 'Sports', 18: 'Short Movies', 19: 'Travel & Events',
+               20: 'Gaming', 21: 'Videoblogging', 22: 'People & Blogs', 23: 'Comedy',
+               24: 'Entertainment', 25: 'News & Politics', 26: 'Howto & Style',
+               27: 'Education', 28: 'Science & Technology', 29: 'Nonprofits & Activism',
+               30: 'Movies', 31: 'Anime/Animation', 32: 'Action/Adventure',
+               33: 'Classics', 34: 'Comedy', 35: 'Documentary', 36: 'Drama',
+               37: 'Family', 38: 'Foreign', 39: 'Horror', 40: 'Sci-Fi/Fantasy',
+               41: 'Thriller', 42: 'Shorts', 43: 'Shows', 44: 'Trailers'}
+    test_vocab = []
+    print("IN CLASSIFY")
+    categories = pickle.load(open("categories.p", "rb"))
+    prior = pickle.load(open("prior.p", "rb"))
+    condprob = pickle.load(open("condprob.p", "rb"))
+    print("After load IN CLASSIFY")
+    tokenizer = RegexpTokenizer(r'[a-zA-Z]+')
+
+    stops = stopwords.words('english')
+
+    stemmer = PorterStemmer()
+
+    terms = tokenizer.tokenize(test)
+    for term in terms:
+        term = term.lower()
+        if term not in stops:
+            term = stemmer.stem(term)
+            test_vocab.append(term)
+
+    score = {}
+    for c in categories:
+        score[c] = prior[c]
+        for term in test_vocab:
+            if term in condprob:
+                score[c] *= condprob[term][c]
+
+    total_score = sum(score.values())
+    # print(total_score)
+    classification={}
+    for c in sorted(score, key=score.get, reverse=True):
+        #print(catdict[c])
+        print(score[c] / float(total_score))
+        classification[catdict[c]]=score[c] / float(total_score)
+    # print(s.values()/sum(score.values()))
+    return classification

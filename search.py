@@ -6,6 +6,8 @@ app = Flask(__name__)
 
 @app.before_first_request
 def tdm_generator():
+  if not os.path.isfile('prior.p'):
+      ii.something()
   if not os.path.isfile('save.p'):
     ii.invertedindex()
 
@@ -30,6 +32,24 @@ def result():
         return render_template("hello.html", query=query, result=result.to_html(escape=False,formatters=dict(image=path_to_image_html)))
     else:
       return render_template("hello.html", query=query, result=result)
+
+@app.route('/classify',methods=['POST','GET'])
+def classify():
+    if request.method == 'POST':
+        test=request.form['classify']
+        categories = []
+        percentage = []
+        print("HELLO")
+        if (test != None):
+            classification = ii.classify(test)
+            for c in classification:
+                categories.append(c)
+                percentage.append(round(classification[c] * 100, 2))
+        #res=ii.classify(test)
+        cat=len(categories)
+        print("LEN OF CAT")
+        print(cat)
+        return render_template("hello.html",categories = categories,percentage = percentage, classification = classification)
 
 if __name__=="__main__":
     app.run(debug=False)

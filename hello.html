@@ -15,7 +15,22 @@
 <h3> {{query}}
   {{result|safe}}
 </h3>
+  <h1>Classify !</h1>
+<form action="/classify" method="POST">
+    <input name="classify" id="classify" placeholder="Classify" required="true"/>
+    <input type="submit" name="submit" value="classify"/>
+</form>
 
-
+<h3>
+<ul>
+{% if classification| length > 0 %}
+{% for i in range(8) %}
+{% if percentage[i] > 0 %}
+    <li>{{categories[i]}} {{percentage[i]}}%</li>
+ {% endif %}
+ {% endfor %}
+ {% endif %}
+ </ul>
+    </h3>
 </body>
 </html>

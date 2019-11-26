@@ -1,9 +1,9 @@
 # Term Project Data Mining
-# phase1: Search
+# Phase1: Search
 
 A search feature which ranks the result based on the tf-idf scores.
 
-Website Link:http://satsankruth.pythonanywhere.com/
+Website Link:http://satsankruth.pythonanywhere.com/ <br>
 Dataset Link: https://www.kaggle.com/datasnaek/youtube-new
 
 **How to Deploy code:**

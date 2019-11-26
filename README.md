@@ -132,7 +132,7 @@ The data set has many repeated items with 40K rows. Modified data set so that it
 
 Dataset Link: https://www.kaggle.com/hsankesara/flickr-image-dataset <br>
 Website Link: http://satsankruth.pythonanywhere.com/ <br>
-Demo Video Link: <br>
+Demo Video Link: https://www.youtube.com/watch?v=LwQrrgDDlmE <br>
 
 Image captioning is the task of generating a caption for an image.
 Uses TensorFlow and Neural Network to generate captions on the google collab repository.

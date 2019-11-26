@@ -62,6 +62,16 @@ def preprocess(data):
     data = remove_punctuation(data)
     return data
 
+def preprocess1(data):
+    data = convert_lower_case(data)
+    data = remove_punctuation(data) #remove comma seperately
+    data = remove_apostrophe(data)
+    #data = remove_stop_words(data)
+    #data = convert_numbers(data)
+    #data = stemming(data)
+    #data = remove_punctuation(data)
+    return data
+
 def count_document1(document, c):
 	document_in_c = 0
 	for doc in document:
@@ -227,6 +237,66 @@ def invertedindex():
 
     #print(len(tf_idf))
 
+def img():
+    img_Data = pd.read_csv("images.csv")
+    processed_text1 = []
+    # processed_title=[]
+    for i in range(len(img_Data)):
+        processed_text1.append(word_tokenize(str(preprocess1(img_Data['caption'][i]))))
+    print(processed_text1[0])
+    DF1 = {}
+    N1 = len(img_Data)
+    for i in range(N1):
+        tokens = processed_text1[i]
+        for w in tokens:
+            try:
+                DF1[w].add(i)
+            except:
+                DF1[w] = {i}
+    for i in DF1:
+        DF1[i] = len(DF1[i])
+
+    total_vocab_size1 = len(DF1)
+    print(total_vocab_size1)
+    total_vocab1 = [x for x in DF1]
+    print(total_vocab1[:20])
+
+    def doc_freq1(word):
+        c = 0
+        try:
+            c = DF1[word]
+        except:
+            pass
+        return c
+
+    doc1 = 0
+
+    tf_idf1 = {}
+
+    for i in range(N1):
+
+        tokens = processed_text1[i]
+
+        counter = Counter(tokens + processed_text1[i])
+        words_count = len(tokens + processed_text1[i])
+
+        for token in np.unique(tokens):
+            tf = counter[token] / words_count
+            df = doc_freq1(token)
+            idf = np.log((N1 + 1) / (df + 1))
+
+            tf_idf1[doc1, token] = tf * idf
+
+        doc1 += 1
+
+    print(len(tf_idf1))
+    alpha = 0.3
+    for i in tf_idf1:
+        tf_idf1[i] *= alpha
+
+    pickle.dump(tf_idf1, open("imgtfidf.p", "wb"))
+
+
 
 def matching_score(k, query):
     preprocessed_query = preprocess(query)
@@ -330,3 +400,44 @@ def classify(test):
         classification[catdict[c]]=score[c] / float(total_score)
     # print(s.values()/sum(score.values()))
     return classification
+
+def imagesearch(k1,query):
+    preprocessed_query = preprocess1(query)
+    tokens = word_tokenize(str(preprocessed_query))
+    img_Data = pd.read_csv("images.csv")
+    tf_idf1 = pickle.load(open("imgtfidf.p", "rb"))
+
+    query_weights = {}
+
+    for key in tf_idf1:
+
+        if key[1] in tokens:
+            try:
+                query_weights[key[0]] += tf_idf1[key]
+            except:
+                query_weights[key[0]] = tf_idf1[key]
+
+    query_weights = sorted(query_weights.items(), key=lambda x: x[1], reverse=True)
+
+    l = []
+
+    k = []
+
+    for i in query_weights[:10]:
+        l.append(i[0])
+        k.append(i[1])
+
+    out1 = []
+    j = 0
+    for i in l:
+        out1.append([img_Data['caption'][i], img_Data['url'][i],k[j]])
+        j += 1
+    pd.set_option('display.max_columns', -1)
+    pd.set_option('display.expand_frame_repr', False)
+    pd.set_option('max_colwidth', -1)
+
+    out1 = pd.DataFrame(out1, columns=['caption', 'image','tf*idf'])
+
+    print(l)
+    print("Done")
+    return out1

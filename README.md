@@ -178,3 +178,8 @@ There are a few images for which the generated captions failed.<br>
 * https://hackernoon.com/begin-your-deep-learning-project-for-free-free-gpu-processing-free-storage-free-easy-upload-b4dba18abebc 
 
 </details>
+
+![img](https://github.com/sathvik-sankruth/Data_Mining-CSE5334/blob/master/Screen%20Shot%202020-06-04%20at%2011.48.37%20PM.png)
+![img](https://github.com/sathvik-sankruth/Data_Mining-CSE5334/blob/master/Screen%20Shot%202020-06-04%20at%2011.52.58%20PM.png)
+![img](https://github.com/sathvik-sankruth/Data_Mining-CSE5334/blob/master/Screen%20Shot%202020-06-04%20at%2011.49.47%20PM.png)
+![img](https://github.com/sathvik-sankruth/Data_Mining-CSE5334/blob/master/Screen%20Shot%202020-06-04%20at%2011.51.32%20PM.png)

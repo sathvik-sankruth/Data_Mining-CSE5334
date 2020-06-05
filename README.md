@@ -1,6 +1,9 @@
 # Term Project Data Mining
-# Phase1: Search
 
+<details>
+<summary>
+Phase1: Search
+</summary>
 A search feature which ranks the result based on the tf-idf scores.
 
 Website Link:http://satsankruth.pythonanywhere.com/ <br>
@@ -56,10 +59,12 @@ Added pickle to save the initial loading time. <br>
 
 * https://www.youtube.com/watch?v=M-QRwEEZ9-8
 
+</details>
 
-
-
-# Phase 2
+<details>
+<summary>
+Phase 2: Classifier
+ </summary>
 Classifier: Multinomial Naïve Bayes Classifier<br>
 Website Link : http://satsankruth.pythonanywhere.com/ <br>
 
@@ -128,10 +133,12 @@ The data set has many repeated items with 40K rows. Modified data set so that it
 
 * https://nlp.stanford.edu/IR-book/pdf/13bayes.pdf
 
+</details>
 
-
-# Phase 3 Image Caption
-
+<details>
+<summary>
+Phase 3: Image Caption
+ </summary>
 Dataset Link: https://www.kaggle.com/hsankesara/flickr-image-dataset <br>
 Website Link: http://satsankruth.pythonanywhere.com/ <br>
 Demo Video Link: https://www.youtube.com/watch?v=LwQrrgDDlmE <br>
@@ -170,4 +177,4 @@ There are a few images for which the generated captions failed.<br>
 
 * https://hackernoon.com/begin-your-deep-learning-project-for-free-free-gpu-processing-free-storage-free-easy-upload-b4dba18abebc 
 
-
+</details>
